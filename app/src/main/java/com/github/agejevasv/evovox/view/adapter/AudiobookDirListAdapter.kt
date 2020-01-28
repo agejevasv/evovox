@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.agejevasv.evovox.R
-import com.github.agejevasv.evovox.db.Db
+import com.github.agejevasv.evovox.db.AppDatabase
 import com.github.agejevasv.evovox.entity.AudiobookDir
 import kotlinx.android.synthetic.main.dir_list_content.view.*
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class AudiobookDirListAdapter :
+class AudiobookDirListAdapter @Inject constructor (val db: AppDatabase) :
     ListAdapter<AudiobookDir, AudiobookDirListAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder =
@@ -36,7 +37,7 @@ class AudiobookDirListAdapter :
             setOnClickListener { v: View ->
                 doAsync {
                     val dir = v.tag as AudiobookDir
-                    Db.getInstance(v.context).db().audiobookDirDao().delete(dir)
+                    db.audiobookDirDao().delete(dir)
                 }
             }
         }

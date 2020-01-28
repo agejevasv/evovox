@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.github.agejevasv.evovox.EvovoxApplication
 import com.github.agejevasv.evovox.R
-import com.github.agejevasv.evovox.db.Db
+import com.github.agejevasv.evovox.db.AppDatabase
 import com.github.agejevasv.evovox.entity.AudiobookDir
 import com.github.agejevasv.evovox.view.adapter.AudiobookDirListAdapter
 import com.github.agejevasv.evovox.view.model.BookDirViewModel
@@ -26,6 +26,12 @@ class DirectoryManagementActivity : AppCompatActivity() {
     @Inject
     lateinit var model: BookDirViewModel
 
+    @Inject
+    lateinit var db: AppDatabase
+
+    @Inject
+    lateinit var adapter: AudiobookDirListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_dirs)
@@ -35,7 +41,7 @@ class DirectoryManagementActivity : AppCompatActivity() {
 
         val cd = chooserDialog().build()
         val recyclerView = findViewById<RecyclerView>(R.id.dirList)
-        val adapter = AudiobookDirListAdapter()
+
         model.getDirs().observe(this, Observer { t: List<AudiobookDir> -> adapter.submitList(t) })
         recyclerView.adapter = adapter
 
@@ -54,9 +60,7 @@ class DirectoryManagementActivity : AppCompatActivity() {
             .withChosenListener { path, pathFile ->
                 progressBar.visibility = View.GONE
                 doAsync {
-                    Db.getInstance(applicationContext).db()
-                        .audiobookDirDao()
-                        .insertAll(AudiobookDir(dir = path))
+                    db.audiobookDirDao().insertAll(AudiobookDir(dir = path))
                 }
             }
             .withAdapterSetter { adapter: DirAdapter? ->
