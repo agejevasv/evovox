@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">EvoVox</string>
+    <string name="title_book_list">EvoVox</string>
+    <string name="title_book_detail">Details</string>
+    <string name="title_book_dirs">Book Directories</string>
+</resources>
