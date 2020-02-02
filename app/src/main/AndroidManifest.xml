@@ -11,7 +11,7 @@
         android:theme="@style/MyTheme"
         android:name=".EvovoxApplication">
         <activity
-            android:name=".activity.BookListActivity"
+            android:name="com.github.agejevasv.evovox.app.activity.BookListActivity"
             android:label="@string/title_book_list"
             android:theme="@style/MyTheme.NoActionBar">
             <intent-filter>
@@ -21,22 +21,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.BookDetailActivity"
+            android:name="com.github.agejevasv.evovox.app.activity.BookDetailActivity"
             android:label="@string/title_book_detail"
-            android:parentActivityName=".activity.BookListActivity"
+            android:parentActivityName="com.github.agejevasv.evovox.app.activity.BookListActivity"
             android:theme="@style/MyTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.BookListActivity" />
+                android:value="com.github.agejevasv.evovox.app.activity.BookListActivity" />
         </activity>
         <activity
-            android:name=".activity.DirectoryManagementActivity"
+            android:name="com.github.agejevasv.evovox.app.activity.DirectoryManagementActivity"
             android:label="@string/title_book_dirs"
-            android:parentActivityName=".activity.BookListActivity"
+            android:parentActivityName="com.github.agejevasv.evovox.app.activity.BookListActivity"
             android:theme="@style/MyTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.BookListActivity" />
+                android:value="com.github.agejevasv.evovox.app.activity.BookListActivity" />
         </activity>
     </application>
 

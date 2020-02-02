@@ -32,6 +32,20 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    task copyFileForTest{
+        group = "My_tasks"
+        description ="Copy auth token from device to project"
+        doFirst {
+            println 'Getting file for Unit tests'
+            def resFolder = new File(projectDir.absolutePath + '/src/androidTest/assets/Audiobooks')
+            exec {
+                commandLine android.getAdbExecutable(),'push', "${resFolder.absolutePath}", '/storage/emulated/0/TestAudioBooks'
+            }
+        }
+    }
+
+    copyFileForTest.mustRunAfter 'connectedAndroidTest'
+
 }
 
 configurations.all {
@@ -48,12 +62,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.2.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.room:room-runtime:2.2.3'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
     kapt 'androidx.room:room-compiler:2.2.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
@@ -62,4 +77,9 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.25.4'
     kapt 'com.google.dagger:dagger-compiler:2.25.4'
     compileOnly 'javax.annotation:jsr250-api:1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.1'
 }

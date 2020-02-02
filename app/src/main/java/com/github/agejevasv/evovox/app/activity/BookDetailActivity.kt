@@ -1,4 +1,4 @@
-package com.github.agejevasv.evovox.activity
+package com.github.agejevasv.evovox.app.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,17 +7,26 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
-import com.github.agejevasv.evovox.fragment.BookDetailFragment
+import com.github.agejevasv.evovox.EvovoxApplication
+import com.github.agejevasv.evovox.app.fragment.BookDetailFragment
 import com.github.agejevasv.evovox.R
+import com.github.agejevasv.evovox.db.AppDatabase
 import kotlinx.android.synthetic.main.activity_book_detail.*
+import javax.inject.Inject
 
 
 class BookDetailActivity : AppCompatActivity() {
+
+    @Inject lateinit var db: AppDatabase
+
+    @Inject lateinit var fragment: BookDetailFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_detail)
         setSupportActionBar(toolbar)
+
+        EvovoxApplication.appComponent.inject(this)
 
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -32,14 +41,12 @@ class BookDetailActivity : AppCompatActivity() {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            val fragment = BookDetailFragment()
-                .apply {
+            fragment.apply {
                 arguments = Bundle().apply {
                     putString(
                         BookDetailFragment.ARG_ITEM_ID,
                         intent.getStringExtra(BookDetailFragment.ARG_ITEM_ID)
+
                     )
                 }
             }
@@ -68,7 +75,6 @@ class BookDetailActivity : AppCompatActivity() {
                 // more details, see the Navigation pattern on Android Design:
                 //
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-
                 navigateUpTo(Intent(this, BookListActivity::class.java))
                 true
             }

@@ -1,4 +1,4 @@
-package com.github.agejevasv.evovox.entity
+package com.github.agejevasv.evovox.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,6 +11,6 @@ import androidx.room.PrimaryKey
     )
 )
 data class AudiobookDir(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "dir") val dir: String?
 )

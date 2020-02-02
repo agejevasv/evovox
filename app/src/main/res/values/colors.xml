@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">#7cb342</color>
-    <color name="color_primary_variant">#7cb342</color>
-    <color name="color_secondary">#7cb342</color>
-    <color name="color_secondary_variant">#7cb342</color>
+    <color name="color_primary">#c0ca33</color>
+    <color name="color_primary_variant">#c0ca33</color>
+    <color name="color_secondary">#c0ca33</color>
+    <color name="color_secondary_variant">#c0ca33</color>
 
     <!--colorBackground appears behind scrollable content and is used for the default window-->
     <!--background. colorSurface is mapped to the surface of components such as cards, sheets-->

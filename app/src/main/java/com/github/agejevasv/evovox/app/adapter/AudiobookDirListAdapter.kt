@@ -1,4 +1,4 @@
-package com.github.agejevasv.evovox.view.adapter
+package com.github.agejevasv.evovox.app.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.agejevasv.evovox.R
 import com.github.agejevasv.evovox.db.AppDatabase
-import com.github.agejevasv.evovox.entity.AudiobookDir
+import com.github.agejevasv.evovox.db.entity.AudiobookDir
+import com.github.agejevasv.evovox.io.BookIndexer
 import kotlinx.android.synthetic.main.dir_list_content.view.*
 import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
-class AudiobookDirListAdapter @Inject constructor (val db: AppDatabase) :
+class AudiobookDirListAdapter @Inject constructor (val db: AppDatabase, val indexer: BookIndexer) :
     ListAdapter<AudiobookDir, AudiobookDirListAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder =
@@ -26,7 +27,7 @@ class AudiobookDirListAdapter @Inject constructor (val db: AppDatabase) :
         )
 
     override fun getItemId(position: Int): Long {
-        return getItem(position).id.toLong()
+        return getItem(position).id
     }
 
     override fun onBindViewHolder(holder: ItemViewholder, position: Int) {

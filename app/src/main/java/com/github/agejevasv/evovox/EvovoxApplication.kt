@@ -5,6 +5,8 @@ import android.app.Application
 import com.github.agejevasv.evovox.dagger.AppComponent
 import com.github.agejevasv.evovox.dagger.AppModule
 import com.github.agejevasv.evovox.dagger.DaggerAppComponent
+import timber.log.Timber
+
 
 class EvovoxApplication : Application() {
 
@@ -14,6 +16,7 @@ class EvovoxApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Timber.plant(Timber.DebugTree())
         appComponent = initDagger(this)
     }
 

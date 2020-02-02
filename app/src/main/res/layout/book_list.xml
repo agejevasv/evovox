@@ -9,5 +9,5 @@
     android:layout_marginLeft="@dimen/keyline_2"
     android:layout_marginRight="@dimen/keyline_2"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".activity.BookListActivity"
+    tools:context=".app.activity.BookListActivity"
     tools:listitem="@layout/book_list_content" />

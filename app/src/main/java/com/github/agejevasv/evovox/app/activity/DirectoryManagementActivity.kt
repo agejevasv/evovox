@@ -1,4 +1,4 @@
-package com.github.agejevasv.evovox.activity
+package com.github.agejevasv.evovox.app.activity
 
 import android.os.Bundle
 import android.view.View
@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.agejevasv.evovox.EvovoxApplication
 import com.github.agejevasv.evovox.R
 import com.github.agejevasv.evovox.db.AppDatabase
-import com.github.agejevasv.evovox.entity.AudiobookDir
-import com.github.agejevasv.evovox.view.adapter.AudiobookDirListAdapter
-import com.github.agejevasv.evovox.view.model.BookDirViewModel
+import com.github.agejevasv.evovox.db.entity.AudiobookDir
+import com.github.agejevasv.evovox.app.adapter.AudiobookDirListAdapter
+import com.github.agejevasv.evovox.app.viewmodel.BookListViewModel
 import com.obsez.android.lib.filechooser.ChooserDialog
 import com.obsez.android.lib.filechooser.tool.DirAdapter
 import kotlinx.android.synthetic.main.activity_book_detail.toolbar
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class DirectoryManagementActivity : AppCompatActivity() {
     @Inject
-    lateinit var model: BookDirViewModel
+    lateinit var model: BookListViewModel
 
     @Inject
     lateinit var db: AppDatabase
@@ -42,7 +42,7 @@ class DirectoryManagementActivity : AppCompatActivity() {
         val cd = chooserDialog().build()
         val recyclerView = findViewById<RecyclerView>(R.id.dirList)
 
-        model.getDirs().observe(this, Observer { t: List<AudiobookDir> -> adapter.submitList(t) })
+        model.getDirs().observe(this, Observer { adapter.submitList(it) })
         recyclerView.adapter = adapter
 
         addBookDir.setOnClickListener { v: View? ->

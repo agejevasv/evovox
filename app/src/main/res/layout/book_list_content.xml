@@ -62,7 +62,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBody2"
             android:layout_marginTop="4dp"
-            android:maxHeight="48dp"/>
+            android:ellipsize="end"
+            android:maxHeight="34dp"/>
     </LinearLayout>
 
     <LinearLayout
