@@ -35,7 +35,9 @@ class BookListActivity : AppCompatActivity() {
 
         bookIndexer.scanBooks()
 
-        model.getBooks().observe(this, Observer { adapter.submitList(it) })
+        model.getBooks().observe(this, Observer {
+            adapter.submitList(it.sortedBy { it.progressInPercent() }.reversed())
+        })
         book_list.adapter = adapter
     }
 

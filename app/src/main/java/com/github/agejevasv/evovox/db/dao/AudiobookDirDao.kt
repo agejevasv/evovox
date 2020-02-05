@@ -9,22 +9,22 @@ import com.github.agejevasv.evovox.db.entity.AudiobookDir
 
 @Dao
 interface AudiobookDirDao {
-    @Query("SELECT * FROM audiobookdir")
+    @Query("SELECT * FROM book_dirs")
     fun getAllLive(): LiveData<List<AudiobookDir>>
 
-    @Query("SELECT * FROM audiobookdir WHERE id IN (:ids)")
+    @Query("SELECT * FROM book_dirs WHERE id IN (:ids)")
     fun loadAllByIdsLive(ids: LongArray): LiveData<List<AudiobookDir>>
 
-    @Query("SELECT * FROM audiobookdir WHERE dir LIKE :dir LIMIT 1")
+    @Query("SELECT * FROM book_dirs WHERE dir LIKE :dir LIMIT 1")
     fun findByNameLive(dir: String): LiveData<AudiobookDir>
 
-    @Query("SELECT * FROM audiobookdir")
+    @Query("SELECT * FROM book_dirs")
     fun getAll(): List<AudiobookDir>
 
-    @Query("SELECT * FROM audiobookdir WHERE id IN (:ids)")
+    @Query("SELECT * FROM book_dirs WHERE id IN (:ids)")
     fun loadAllByIds(ids: LongArray): List<AudiobookDir>
 
-    @Query("SELECT * FROM audiobookdir WHERE dir LIKE :dir LIMIT 1")
+    @Query("SELECT * FROM book_dirs WHERE dir LIKE :dir LIMIT 1")
     fun findByName(dir: String): AudiobookDir
 
     @Insert

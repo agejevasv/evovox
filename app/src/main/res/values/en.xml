@@ -3,4 +3,5 @@
     <string name="book_progress">%1$d\%%</string>
     <string name="book_length">%1$s</string>
     <string name="book_length_with_progress">%1$s / %2$s</string>
+    <string name="playback_speed">Playback speed: %1$s</string>
 </resources>

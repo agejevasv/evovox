@@ -17,12 +17,14 @@ import java.io.File
             childColumns = arrayOf("bookId"),
             onDelete = CASCADE
         )
-    ]
+    ],
+    tableName = "book_file"
 )
 data class BookFile(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "bookId") val bookId: Long?,
-    @ColumnInfo(name = "fileName") val fileName: String?
+    @ColumnInfo(name = "fileName") val fileName: String?,
+    @ColumnInfo(name = "durationMs") var durationMs: Long = 0
 ) {
     fun file() = if (fileName != null) File(fileName) else null
 }

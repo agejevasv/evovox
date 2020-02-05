@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(
     indices = arrayOf(
         Index(value = ["dir"], unique = true)
-    )
+    ),
+    tableName = "book_dirs"
 )
 data class AudiobookDir(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

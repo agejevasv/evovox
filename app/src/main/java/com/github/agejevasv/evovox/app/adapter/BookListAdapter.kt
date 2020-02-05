@@ -17,18 +17,19 @@ import com.github.agejevasv.evovox.app.activity.BookDetailActivity
 import com.github.agejevasv.evovox.app.fragment.BookDetailFragment
 import com.github.agejevasv.evovox.db.AppDatabase
 import com.github.agejevasv.evovox.db.entity.Book
+import com.github.agejevasv.evovox.db.entity.BookWithFiles
 import kotlinx.android.synthetic.main.book_list_content.view.*
 import javax.inject.Inject
 
 class BookListAdapter @Inject constructor (val db: AppDatabase, val ctx: Context) :
-ListAdapter<Book, BookListAdapter.ViewHolder>(DiffCallback()) {
+ListAdapter<BookWithFiles, BookListAdapter.ViewHolder>(DiffCallback()) {
     private val onClickListener: View.OnClickListener
 
     init {
         onClickListener = View.OnClickListener { v ->
-            val item = v.tag as Book
+            val item = v.tag as BookWithFiles
             val intent = Intent(v.context, BookDetailActivity::class.java).apply {
-                putExtra(BookDetailFragment.ARG_ITEM_ID, item.id.toString())
+                putExtra(BookDetailFragment.ARG_ITEM_ID, item.book.id.toString())
             }
             v.context.startActivity(intent)
         }
@@ -42,29 +43,30 @@ ListAdapter<Book, BookListAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bookAuthorView.text = item.author
-        holder.bookTitleView.text = item.title
+        holder.bookAuthorView.text = item.book.author
+        holder.bookTitleView.text = item.book.title
 
-        if (item.progress == 0L) {
-            holder.durationView.text =
-                ctx.getString(
-                    R.string.book_length,
-                    DateUtils.formatElapsedTime(item.duration))
-        } else {
+        if (item.progressInSeconds() > 0) {
             holder.durationView.text =
                 ctx.getString(
                     R.string.book_length_with_progress,
-                    DateUtils.formatElapsedTime(item.duration - item.progress),
-                    DateUtils.formatElapsedTime(item.duration))
+                    DateUtils.formatElapsedTime(item.progressInSeconds()),
+                    DateUtils.formatElapsedTime(item.durationInSeconds())
+                )
+        } else {
+            holder.durationView.text =
+                ctx.getString(
+                    R.string.book_length,
+                    DateUtils.formatElapsedTime(item.durationInSeconds()))
         }
 
-        holder.progressView.text = ctx.getString(R.string.book_progress, item.progress)
-        holder.determinateBarView.progress = item.progress.toInt()
+        holder.progressView.text = ctx.getString(R.string.book_progress, item.progressInPercent())
+        holder.determinateBarView.progress = item.progressInPercent()
 
         holder.imageView.setImageDrawable(null)
         holder.initialsView.visibility = View.VISIBLE
-        holder.initialsView.text = item.author.split(" ").map { it.take(1) }.joinToString("").toUpperCase().take(3)
-        holder.bookTitleView.text = item.title
+        holder.initialsView.text = item.book.author.split(" ").map { it.take(1) }.joinToString("").toUpperCase().take(3)
+        holder.bookTitleView.text = item.book.title
 
         with(holder.itemView) {
             tag = item
@@ -83,12 +85,12 @@ ListAdapter<Book, BookListAdapter.ViewHolder>(DiffCallback()) {
         val imageView: ImageView = view.imageView
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Book>() {
-        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
-            return oldItem.id == newItem.id
+    class DiffCallback : DiffUtil.ItemCallback<BookWithFiles>() {
+        override fun areItemsTheSame(oldItem: BookWithFiles, newItem: BookWithFiles): Boolean {
+            return oldItem.book.id == newItem.book.id
         }
 
-        override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
+        override fun areContentsTheSame(oldItem: BookWithFiles, newItem: BookWithFiles): Boolean {
             return oldItem == newItem
         }
     }

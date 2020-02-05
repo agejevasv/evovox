@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="bottom"
+    android:layout_gravity="bottom"
     android:orientation="vertical">
 
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/book_files_list"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        tools:context=".app.fragment.BookDetailFragment" />
+        <com.github.agejevasv.evovox.app.Spinner
+            android:id="@+id/book_files_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            tools:context=".app.fragment.BookDetailFragment" />
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/player"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:show_buffering="when_playing"
-        app:show_shuffle_button="false"/>
+        <com.google.android.exoplayer2.ui.PlaybackControlView
+            android:id="@+id/player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shutter_background_color="@color/color_background"
+            app:played_color="@color/color_primary"
+            app:show_buffering="never"
+            app:show_shuffle_button="false"
+            app:use_artwork="false"
+            app:hide_on_touch="false"
+            app:show_timeout="0"
+            android:layout_gravity="bottom"
+            android:foregroundGravity="bottom"/>
+
 </LinearLayout>

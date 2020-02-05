@@ -2,16 +2,20 @@ package com.github.agejevasv.evovox.app.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
+import android.widget.SeekBar
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import com.github.agejevasv.evovox.EvovoxApplication
-import com.github.agejevasv.evovox.app.fragment.BookDetailFragment
 import com.github.agejevasv.evovox.R
+import com.github.agejevasv.evovox.app.fragment.BookDetailFragment
 import com.github.agejevasv.evovox.db.AppDatabase
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.SimpleExoPlayer
 import kotlinx.android.synthetic.main.activity_book_detail.*
+import java.math.BigDecimal
 import javax.inject.Inject
 
 
@@ -21,6 +25,8 @@ class BookDetailActivity : AppCompatActivity() {
 
     @Inject lateinit var fragment: BookDetailFragment
 
+    @Inject lateinit var player: SimpleExoPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_detail)
@@ -28,18 +34,8 @@ class BookDetailActivity : AppCompatActivity() {
 
         EvovoxApplication.appComponent.inject(this)
 
-        // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
         if (savedInstanceState == null) {
             fragment.apply {
                 arguments = Bundle().apply {
@@ -52,7 +48,7 @@ class BookDetailActivity : AppCompatActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                .add(R.id.book_detail_container, fragment)
+                .replace(R.id.book_detail_container, fragment)
                 .commit()
         }
     }
@@ -70,12 +66,41 @@ class BookDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             android.R.id.home -> {
-                // This ID represents the Home or Up button. In the case of this
-                // activity, the Up button is shown. For
-                // more details, see the Navigation pattern on Android Design:
-                //
-                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
                 navigateUpTo(Intent(this, BookListActivity::class.java))
+                true
+            }
+            R.id.menu_speed_settings -> {
+                val builder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog))
+                builder.setView(layoutInflater.inflate(R.layout.speed_dialog, null))
+                builder.setPositiveButton("OK") { _, _ -> }
+                val dialog = builder.create()
+                dialog.show()
+
+                val layoutParams = WindowManager.LayoutParams()
+                layoutParams.copyFrom(dialog.window?.attributes)
+                layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
+                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+                dialog.window?.attributes = layoutParams
+
+                val seekBar = dialog.findViewById<SeekBar>(R.id.speedSeekBar)
+                val speedText = dialog.findViewById<TextView>(R.id.speedTextView)
+
+                val storedSpeed = player.playbackParameters.speed
+
+                seekBar?.progress = (storedSpeed * 10).toInt() - 5
+                speedText?.text = String.format("%.1f x", storedSpeed)
+
+                seekBar?.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        val speed = BigDecimal((progress + 5) / 10.0).setScale(2, BigDecimal.ROUND_HALF_EVEN)
+                        speedText?.text = String.format("%.1fx", speed)
+                        player.setPlaybackParameters(PlaybackParameters(speed.toFloat()))
+                    }
+                })
+
                 true
             }
             else -> super.onOptionsItemSelected(item)

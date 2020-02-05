@@ -19,19 +19,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/top_app_bar_menu_share"
+        android:id="@+id/menu_speed_settings"
         android:title=""
-        android:icon="@drawable/ic_access_time_black_24dp"
+        android:icon="@drawable/ic_settings_24dp"
             app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/top_app_bar_menu_bookmark"
-        android:title=""
-        android:icon="@drawable/ic_pause_circle_outline_black_24dp"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/top_app_bar_menu_search"
-        android:title=""
-        android:icon="@drawable/ic_replay_10_black_24dp"
-        app:showAsAction="ifRoom" />
 </menu>
