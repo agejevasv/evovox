@@ -8,12 +8,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.github.agejevasv.evovox.EvovoxApplication
 import com.github.agejevasv.evovox.R
-import com.github.agejevasv.evovox.db.AppDatabase
-import com.github.agejevasv.evovox.io.BookIndexer
 import com.github.agejevasv.evovox.app.adapter.BookListAdapter
 import com.github.agejevasv.evovox.app.viewmodel.BookListViewModel
+import com.github.agejevasv.evovox.db.AppDatabase
+import com.github.agejevasv.evovox.io.BookIndexer
 import kotlinx.android.synthetic.main.activity_book_list.*
 import kotlinx.android.synthetic.main.book_list.*
 import javax.inject.Inject
@@ -35,10 +36,9 @@ class BookListActivity : AppCompatActivity() {
 
         bookIndexer.scanBooks()
 
-        model.getBooks().observe(this, Observer {
-            adapter.submitList(it.sortedBy { it.progressInPercent() }.reversed())
-        })
+        model.getBooks().observe(this, Observer { adapter.submitList(it) })
         book_list.adapter = adapter
+        (book_list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

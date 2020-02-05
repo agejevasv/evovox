@@ -14,8 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.github.agejevasv.evovox.EvovoxApplication
 import com.github.agejevasv.evovox.R
-import com.github.agejevasv.evovox.app.GlobalStore
-import com.github.agejevasv.evovox.app.Spinner
+import com.github.agejevasv.evovox.app.ui.Spinner
 import com.github.agejevasv.evovox.db.AppDatabase
 import com.github.agejevasv.evovox.db.entity.BookSettings
 import com.github.agejevasv.evovox.db.entity.BookWithFiles
@@ -50,39 +49,36 @@ class BookDetailFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         EvovoxApplication.appComponent.inject(this)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
         arguments?.let {
-            if (it.containsKey(ARG_ITEM_ID)) {
-                id = it.getString(ARG_ITEM_ID)!!
+            if (it.containsKey(ARG_KEY_BOOK_ID)) {
+                id = it.getString(ARG_KEY_BOOK_ID)!!
             }
         }
     }
 
-    private fun saveProgress(fileNumber: Int, timeMs: Long, speed: Float) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val bookId = GlobalStore.get<String?>("fragmentIsPreparedForId")
-            var book: BookWithFiles? = null
+    private fun saveProgress(bookId: String?, fileNumber: Int, timeMs: Long, speed: Float) {
+        if (bookId == null) {
+            return
+        }
 
-            if (bookId != null) {
-                book = getBook(bookId)
-            }
+        GlobalScope.launch(Dispatchers.Main) {
+            val book: BookWithFiles? = getBook(bookId)
 
             if (book == null) {
                 Timber.i("Canceling saveProgress because book is null")
                 coroutineContext.cancel()
             }
 
-            val settings = book!!.settings
+            val settings = book?.settings
 
-            settings.filePositionNumber = fileNumber
-            settings.timeInFileMs = timeMs
-            settings.speed = speed
+            settings?.filePositionNumber = fileNumber
+            settings?.timeInFileMs = timeMs
+            settings?.speed = speed
 
-            updateSettings(settings)
+            if (settings != null) {
+                updateSettings(settings)
+            }
         }
      }
 
@@ -93,7 +89,7 @@ class BookDetailFragment : Fragment() {
 
     private suspend fun updateSettings(settings: BookSettings) {
         withContext(Dispatchers.IO) {
-            Timber.i("Storing settings: ${settings}")
+            Timber.i("Storing settings: $settings")
             db.bookDao().updateBookSettings(settings)
         }
     }
@@ -132,17 +128,18 @@ class BookDetailFragment : Fragment() {
     }
 
     private fun preparePlayer(rootView: View, book: BookWithFiles) {
-        if (id != GlobalStore.get<String?>("fragmentIsPreparedForId")) {
+        if (CURRENT_BOOK_ID != id) {
             player.playWhenReady = false
-            player.prepare(ConcatenatingMediaSource(*mediaSource(book).toTypedArray()), true, true)
-            player.setPlaybackParameters(PlaybackParameters(book.settings.speed))
-            player.seekTo(book.settings.filePositionNumber, book.settings.timeInFileMs)
 
             val listener = playerEventListener(rootView)
             player.removeListener(listener)
             player.addListener(listener)
 
-            GlobalStore.put("fragmentIsPreparedForId", id)
+            CURRENT_BOOK_ID = id
+
+            player.prepare(ConcatenatingMediaSource(*mediaSource(book).toTypedArray()), true, true)
+            player.setPlaybackParameters(PlaybackParameters(book.settings.speed))
+            player.seekTo(book.settings.filePositionNumber, book.settings.timeInFileMs)
         }
     }
 
@@ -181,7 +178,12 @@ class BookDetailFragment : Fragment() {
 
         override fun onPositionDiscontinuity(reason: Int) {
             super.onPositionDiscontinuity(reason)
-            saveProgress(player.currentWindowIndex, player.currentPosition, player.playbackParameters.speed)
+            saveProgress(
+                id,
+                player.currentWindowIndex,
+                player.currentPosition,
+                player.playbackParameters.speed
+            )
             rootView.book_files_list.setPosition(player.currentWindowIndex, false, false)
 
         }
@@ -194,7 +196,12 @@ class BookDetailFragment : Fragment() {
                 positionDisposable = Observable
                     .interval(444L, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                     .subscribe {
-                        saveProgress(player.currentWindowIndex, player.currentPosition, player.playbackParameters.speed)
+                        saveProgress(
+                            id,
+                            player.currentWindowIndex,
+                            player.currentPosition,
+                            player.playbackParameters.speed
+                        )
                     }
             } else {
                 positionDisposable?.dispose()
@@ -217,6 +224,7 @@ class BookDetailFragment : Fragment() {
     }
 
     companion object {
-        const val ARG_ITEM_ID = "item_id"
+        const val ARG_KEY_BOOK_ID = "bookId"
+        var CURRENT_BOOK_ID: String? = null
     }
 }

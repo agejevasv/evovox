@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/keyline_2"
     android:layout_marginRight="@dimen/keyline_2"
+    android:animateLayoutChanges="false"
     app:layoutManager="LinearLayoutManager"
     tools:context=".app.activity.BookListActivity"
     tools:listitem="@layout/book_list_content" />

@@ -40,8 +40,8 @@ class BookDetailActivity : AppCompatActivity() {
             fragment.apply {
                 arguments = Bundle().apply {
                     putString(
-                        BookDetailFragment.ARG_ITEM_ID,
-                        intent.getStringExtra(BookDetailFragment.ARG_ITEM_ID)
+                        BookDetailFragment.ARG_KEY_BOOK_ID,
+                        intent.getStringExtra(BookDetailFragment.ARG_KEY_BOOK_ID)
 
                     )
                 }

@@ -16,7 +16,6 @@ import com.github.agejevasv.evovox.R
 import com.github.agejevasv.evovox.app.activity.BookDetailActivity
 import com.github.agejevasv.evovox.app.fragment.BookDetailFragment
 import com.github.agejevasv.evovox.db.AppDatabase
-import com.github.agejevasv.evovox.db.entity.Book
 import com.github.agejevasv.evovox.db.entity.BookWithFiles
 import kotlinx.android.synthetic.main.book_list_content.view.*
 import javax.inject.Inject
@@ -29,7 +28,7 @@ ListAdapter<BookWithFiles, BookListAdapter.ViewHolder>(DiffCallback()) {
         onClickListener = View.OnClickListener { v ->
             val item = v.tag as BookWithFiles
             val intent = Intent(v.context, BookDetailActivity::class.java).apply {
-                putExtra(BookDetailFragment.ARG_ITEM_ID, item.book.id.toString())
+                putExtra(BookDetailFragment.ARG_KEY_BOOK_ID, item.book.id.toString())
             }
             v.context.startActivity(intent)
         }
@@ -61,6 +60,12 @@ ListAdapter<BookWithFiles, BookListAdapter.ViewHolder>(DiffCallback()) {
         }
 
         holder.progressView.text = ctx.getString(R.string.book_progress, item.progressInPercent())
+
+        if (item.progressInPercent() == 0)
+            holder.progressView.setTextColor(ctx.resources.getColor(R.color.color_on_background))
+        else
+            holder.progressView.setTextColor(ctx.resources.getColor(R.color.color_on_surface))
+
         holder.determinateBarView.progress = item.progressInPercent()
 
         holder.imageView.setImageDrawable(null)

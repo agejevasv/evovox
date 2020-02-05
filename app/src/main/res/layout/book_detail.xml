@@ -11,7 +11,7 @@
     android:orientation="vertical">
 
 
-        <com.github.agejevasv.evovox.app.Spinner
+        <com.github.agejevasv.evovox.app.ui.Spinner
             android:id="@+id/book_files_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

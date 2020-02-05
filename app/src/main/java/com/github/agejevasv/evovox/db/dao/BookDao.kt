@@ -22,7 +22,7 @@ interface BookDao {
     @Query("SELECT * FROM book")
     fun getAllBooks(): List<Book>
 
-    @Query("SELECT * FROM book where visible = :visible ORDER BY createdAt DESC")
+    @Query("SELECT * FROM book where visible = :visible")
     fun getAllBooksLive(visible: Boolean = true): LiveData<List<BookWithFiles>>
 
     @Query("SELECT * FROM book WHERE id IN (:ids)")
