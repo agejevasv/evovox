@@ -2,6 +2,7 @@ package com.github.agejevasv.evovox.app.fragment
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -45,9 +46,11 @@ class BookDetailFragment : Fragment() {
 
     private var book: BookWithFiles? = null
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        ACTIVITY = context as Activity
+
         EvovoxApplication.appComponent.inject(this)
 
         arguments?.let {
@@ -108,15 +111,17 @@ class BookDetailFragment : Fragment() {
             book = getBook(id)
 
             book?.let {
-                preparePlayer(rootView, it)
+                preparePlayer(it)
 
                 val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
                 toolbar?.title = it.book.title
 
                 bookFiles.addAll(it.sortedFiles().map { File(it.fileName!!).name })
-                adapter?.notifyDataSetChanged()
-                rootView.book_files_list.setOnItemSelectedListener(itemSelectedListener())
-                rootView.book_files_list.setSelection(it.settings.filePositionNumber)
+                adapter.notifyDataSetChanged()
+
+                val chapters = activity?.findViewById<Spinner>(R.id.book_files_list)
+                chapters?.setOnItemSelectedListener(itemSelectedListener())
+                chapters?.setSelection(it.settings.filePositionNumber)
 
                 val playerView: PlayerControlView? = view?.findViewById(R.id.player)
                 playerView?.setShowMultiWindowTimeBar(true)
@@ -127,11 +132,11 @@ class BookDetailFragment : Fragment() {
         return rootView
     }
 
-    private fun preparePlayer(rootView: View, book: BookWithFiles) {
+    private fun preparePlayer(book: BookWithFiles) {
         if (CURRENT_BOOK_ID != id) {
             player.playWhenReady = false
 
-            val listener = playerEventListener(rootView)
+            val listener = playerEventListener()
             player.removeListener(listener)
             player.addListener(listener)
 
@@ -173,7 +178,7 @@ class BookDetailFragment : Fragment() {
         }
     }
 
-    private fun playerEventListener(rootView: View) = object: Player.EventListener {
+    private fun playerEventListener() = object: Player.EventListener {
         private var positionDisposable: Disposable? = null
 
         override fun onPositionDiscontinuity(reason: Int) {
@@ -184,7 +189,9 @@ class BookDetailFragment : Fragment() {
                 player.currentPosition,
                 player.playbackParameters.speed
             )
-            rootView.book_files_list.setPosition(player.currentWindowIndex, false, false)
+            ACTIVITY
+                ?.findViewById<Spinner>(R.id.book_files_list)
+                ?.setPosition(player.currentWindowIndex, false, false)
 
         }
 
@@ -221,10 +228,12 @@ class BookDetailFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         book = null
+        ACTIVITY = null
     }
 
     companion object {
         const val ARG_KEY_BOOK_ID = "bookId"
         var CURRENT_BOOK_ID: String? = null
+        var ACTIVITY: Activity? = null
     }
 }
