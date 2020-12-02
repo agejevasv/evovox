@@ -150,14 +150,9 @@ class BookDetailFragment : Fragment() {
 
     private fun mediaSource(book: BookWithFiles): List<MediaSource> =
         book.sortedFiles().map {
-            val source = ProgressiveMediaSource
+            ProgressiveMediaSource
                 .Factory(dataSourceFactory, DefaultExtractorsFactory().setConstantBitrateSeekingEnabled(true))
                 .createMediaSource(Uri.fromFile(File(it.fileName!!)))
-            if (it.durationMs > 0) {
-                ClippingMediaSource(source, 0, it.durationMs * 1000)
-            } else {
-                source
-            }
         }
 
     private fun itemSelectedListener() = object: Spinner.OnItemSelectedListener {
