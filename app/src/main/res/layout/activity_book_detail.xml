@@ -20,7 +20,7 @@
             android:background="@color/color_background"
             app:popupTheme="@style/MyTheme.PopupOverlay"
             app:titleTextColor="@color/color_on_background"
-            app:title="Book Details"/>
+            app:title=""/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout

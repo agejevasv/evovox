@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.github.agejevasv.evovox.EvovoxApplication
@@ -30,6 +31,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.book_detail.view.*
+import kotlinx.android.synthetic.main.book_list_content.view.*
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.io.File
@@ -110,18 +112,26 @@ class BookDetailFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             book = getBook(id)
 
+
             book?.let {
                 preparePlayer(it)
 
-                val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
-                toolbar?.title = it.book.title
+                val authorView: TextView = rootView.author
+                authorView.text = it.book.author
+                val titleView: TextView = rootView.title
+                titleView.text = it.book.title
 
                 bookFiles.addAll(it.sortedFiles().map { File(it.fileName!!).name })
                 adapter.notifyDataSetChanged()
 
+                if (bookFiles.size == 1) {
+                    rootView.book_files_list.setVisibility(View.GONE);
+                }
+
                 val chapters = activity?.findViewById<Spinner>(R.id.book_files_list)
                 chapters?.setOnItemSelectedListener(itemSelectedListener())
                 chapters?.setSelection(it.settings.filePositionNumber)
+                chapters?.setPadding(0, chapters.paddingTop, chapters.paddingRight, chapters.paddingBottom)
 
                 val playerView: PlayerControlView? = view?.findViewById(R.id.player)
                 playerView?.setShowMultiWindowTimeBar(true)

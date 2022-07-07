@@ -68,9 +68,7 @@ ListAdapter<BookWithFiles, BookListAdapter.ViewHolder>(DiffCallback()) {
 
         holder.determinateBarView.progress = item.progressInPercent()
 
-        holder.imageView.setImageDrawable(null)
-        holder.initialsView.visibility = View.VISIBLE
-        holder.initialsView.text = item.book.author.split(" ").map { it.take(1) }.joinToString("").toUpperCase().take(3)
+
         holder.bookTitleView.text = item.book.title
 
         with(holder.itemView) {
@@ -85,9 +83,7 @@ ListAdapter<BookWithFiles, BookListAdapter.ViewHolder>(DiffCallback()) {
         val bookTitleView: TextView = view.bookTitle
         val durationView: TextView = view.duration
         val progressView: TextView = view.progress
-        val initialsView: TextView = view.initials
         val determinateBarView: ProgressBar = view.determinateBar
-        val imageView: ImageView = view.imageView
     }
 
     class DiffCallback : DiffUtil.ItemCallback<BookWithFiles>() {

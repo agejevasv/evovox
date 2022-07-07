@@ -1,35 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="bottom"
-    android:layout_gravity="bottom"
-    android:orientation="vertical">
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:background="@drawable/photo_bg">
 
 
-        <com.github.agejevasv.evovox.app.ui.Spinner
-            android:id="@+id/book_files_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            tools:context=".app.fragment.BookDetailFragment" />
+                <TextView
+                        android:id="@+id/author"
+                        android:text="Author Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="16dp"
+                        android:textSize="22sp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:shadowColor="#000000"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="2"
+                        android:paddingHorizontal="@dimen/text_margin"
+                        tools:context=".app.fragment.BookDetailFragment"/>
 
-        <com.google.android.exoplayer2.ui.PlaybackControlView
-            android:id="@+id/player"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:shutter_background_color="@color/color_background"
-            app:played_color="@color/color_primary"
-            app:show_buffering="never"
-            app:show_shuffle_button="false"
-            app:use_artwork="false"
-            app:hide_on_touch="false"
-            app:show_timeout="0"
-            android:layout_gravity="bottom"
-            android:foregroundGravity="bottom"/>
+                <TextView
+                        android:id="@+id/title"
+                        android:text="This Book Title Very Very Long 1 2 (whatever)"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="28sp"
+                        android:gravity="center"
+                        android:layout_weight="4"
+                        android:paddingHorizontal="@dimen/text_margin"
+                        android:textColor="@color/color_on_surface"
+                        tools:context=".app.fragment.BookDetailFragment"/>
 
+                <com.github.agejevasv.evovox.app.ui.Spinner
+                        android:id="@+id/book_files_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:paddingHorizontal="@dimen/text_margin"
+                        tools:context=".app.fragment.BookDetailFragment" />
+
+                <com.google.android.exoplayer2.ui.PlaybackControlView
+                        android:id="@+id/player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="10sp"
+                        app:shutter_background_color="@color/color_background"
+                        app:played_color="@color/color_primary"
+                        app:show_buffering="never"
+                        app:show_shuffle_button="false"
+                        app:use_artwork="false"
+                        app:hide_on_touch="false"
+                        app:show_timeout="0"
+                        android:layout_gravity="bottom"
+                        android:foregroundGravity="bottom"/>
 </LinearLayout>
+
+

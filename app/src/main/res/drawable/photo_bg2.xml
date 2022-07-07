@@ -6,9 +6,9 @@
                 <shape>
                     <gradient
                         android:startColor="@color/color_background_darker1"
-                        android:endColor="@color/color_surface"
+                        android:endColor="@color/color_surface1"
                         android:type="linear"
-                        android:angle="45" />
+                        android:angle="0" />
                 </shape>
             </item>
           </layer-list>
